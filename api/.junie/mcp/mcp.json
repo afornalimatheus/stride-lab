@@ -1,0 +1,11 @@
+{
+    "mcpServers": {
+        "laravel-boost": {
+            "command": "/Users/matheusafornali/Library/Application Support/Herd/bin/php84",
+            "args": [
+                "/Users/matheusafornali/projects/estudos/stride-lab/api/artisan",
+                "boost:mcp"
+            ]
+        }
+    }
+}
