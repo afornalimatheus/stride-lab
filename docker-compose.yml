@@ -38,10 +38,10 @@ services:
     expose:
       - "3306"
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: stride_lab
-      MYSQL_USER: stride_lab
-      MYSQL_PASSWORD: stride_lab
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - mariadb-data:/var/lib/mysql
     networks:
