@@ -1,0 +1,49 @@
+services:
+  api-dev:
+    env_file:
+      - ./api/.env
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
+    container_name: stride_lab_api_dev
+    ports:
+      - "3000:3000"
+    networks:
+      - stride-lab-net
+    depends_on:
+      - mariadb
+      - redis
+    volumes:
+      - ./api:/usr/src/app
+      - /usr/src/app/node_modules
+
+  mariadb:
+    image: mariadb:10.6.16
+    container_name: stride_lab_mariadb
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: stride_lab
+      MYSQL_USER: stride_lab
+      MYSQL_PASSWORD: stride_lab
+    volumes:
+      - "./mariadb-data/data:/var/lib/mysql/data/"
+      - "./mariadb-data/logs:/var/lib/mysql/logs/"
+    networks:
+      - stride-lab-net
+
+  redis:
+    image: redis:6
+    container_name: stride_lab_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - stride-lab-net
+
+networks:
+  stride-lab-net:
+    driver: bridge
+
+volumes:
+  mariadb-data:
