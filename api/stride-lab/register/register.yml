@@ -12,8 +12,8 @@ http:
       {
         "name": "Matheus Afornali",
         "email": "matheus@toastlabs.com.br",
-        "password": "Torrada1803!!",
-        "password_confirmation": "Torrada1803!!"
+        "password": "password",
+        "password_confirmation": "password"
       }
   auth: inherit
 
