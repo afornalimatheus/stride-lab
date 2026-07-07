@@ -1,0 +1,24 @@
+info:
+  name: register
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{API_URL}}/auth/register"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Matheus Afornali",
+        "email": "matheus@toastlabs.com.br",
+        "password": "Torrada1803!!",
+        "password_confirmation": "Torrada1803!!"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
