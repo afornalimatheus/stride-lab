@@ -10,12 +10,11 @@ http:
     type: json
     data: |-
       {
-        "name": "Matheus Afornali",
-        "email": "matheus@toastlabs.com.br",
+        "name": "Andressa Ferreira",
+        "email": "andressa@toastlabs.com.br",
         "password": "password",
         "password_confirmation": "password"
       }
-  auth: inherit
 
 settings:
   encodeUrl: true

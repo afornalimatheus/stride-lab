@@ -2,5 +2,5 @@ name: development
 variables:
   - name: API_URL
     value: http://localhost:8000/api
-  - name: token
-    value: ""
+  - secret: true
+    name: access_token

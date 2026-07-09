@@ -1,18 +1,11 @@
 info:
-  name: login
+  name: logout
   type: http
-  seq: 1
+  seq: 2
 
 http:
   method: POST
-  url: "{{API_URL}}/auth/login"
-  body:
-    type: json
-    data: |-
-      {
-        "email": "matheus@toastlabs.com.br",
-        "password": "Torrada1803!!"
-      }
+  url: "{{API_URL}}/auth/logout"
   auth: inherit
 
 runtime:

@@ -3,22 +3,20 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
     /**
      * Authenticate a user and return a JWT token.
      */
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(LoginRequest $request): JsonResponse
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'string', 'email'],
-            'password' => ['required', 'string'],
-        ]);
+        $credentials = $request->validated();
+        $guard = $this->jwtGuard();
 
-        if (!$token = auth('api')->attempt($credentials)) {
+        if (!$token = $guard->attempt($credentials)) {
             return response()->json(['message' => 'Invalid credentials.'], 401);
         }
 
@@ -26,14 +24,16 @@ class LoginController extends Controller
     }
 
     /**
-     * @return array{access_token: string, token_type: string, expires_in: int}
+     * @return JsonResponse
      */
     private function respondWithToken(string $token): JsonResponse
     {
+        $guard = $this->jwtGuard();
+
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60,
+            'expires_in' => $guard->factory()->getTTL() * 60,
         ]);
     }
 }
