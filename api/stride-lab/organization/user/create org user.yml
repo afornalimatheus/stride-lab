@@ -1,0 +1,23 @@
+info:
+  name: create org user
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{API_URL}}/dashboard/users"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Torrada Afornali",
+        "email": "torrara@toastlabs.com.br",
+        "password": "password"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

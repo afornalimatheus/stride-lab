@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Http\Resources\User\MeUserResource;
+use App\Http\Resources\Auth\MeUserResource;
 
 class MeController extends Controller
 {
