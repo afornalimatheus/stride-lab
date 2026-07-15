@@ -31,6 +31,11 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'user_role');
+    }
+
     public function getJWTIdentifier(): mixed
     {
         return $this->getKey();
