@@ -4,6 +4,7 @@ namespace App\Http\Requests\Organization\Users;
 
 use App\Http\Requests\BaseRequest;
 use Illuminate\Validation\Rule;
+use App\Enums\RoleEnum;
 use Illuminate\Validation\Validator;
 use OpenApi\Annotations as OA;
 
@@ -29,12 +30,18 @@ use OpenApi\Annotations as OA;
  *         type="string",
  *         format="password",
  *         description="User password"
+ *     ),
+ *     @OA\Property(
+ *         property="role",
+ *         type="string",
+ *         description="User role"
  *     )
  * )
  *
  * @property string $name
  * @property string $email
  * @property string $password
+ * @property string $role
  */
 class CreateOrganizationUserRequest extends BaseRequest
 {
@@ -45,8 +52,12 @@ class CreateOrganizationUserRequest extends BaseRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->where('client_id', $this->getClient()->id)],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')],
             'password' => ['required', 'string', 'min:8'],
+            'role' => [
+                'required', 
+                'string', 
+                Rule::in(RoleEnum::OWNER->value, RoleEnum::MANAGER->value, RoleEnum::ATHLETE->value)],
         ];
     }
 }

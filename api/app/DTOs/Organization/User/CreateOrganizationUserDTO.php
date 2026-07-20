@@ -12,11 +12,13 @@ class CreateOrganizationUserDTO extends DTO
      * @param string $name
      * @param string $email
      * @param string $password
+     * @param string $role
      */
     public function __construct(
         public string $name,
         public string $email,
         public string $password,
+        public string $role,
     ) {
     }
 }

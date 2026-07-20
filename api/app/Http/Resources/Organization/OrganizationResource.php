@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Organization\User;
+namespace App\Http\Resources\Organization;
 
 use App\Http\Resources\JsonResource;
 use Illuminate\Http\Request;
@@ -41,7 +41,7 @@ use OpenApi\Annotations as OA;
  *
  * @mixin \App\Models\User
  */
-class CreateOrganizationUserResource extends JsonResource
+class OrganizationResource extends JsonResource
 {
     /**
      * @param Request $request
@@ -53,6 +53,15 @@ class CreateOrganizationUserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
+            'phone' => $this->phone,
+            'document' => $this->document,
+            'owner' => $this->owner,
+            'address' => $this->address,
+            'neighborhood' => $this->neighborhood,
+            'city' => $this->city,
+            'state' => $this->state,
+            'organization_type' => $this->organization_type,
+            'active' => $this->active,
         ];
     }
 }

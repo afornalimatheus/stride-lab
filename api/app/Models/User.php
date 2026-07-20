@@ -31,9 +31,25 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
-    public function roles()
+    public function currentOrganization()
     {
-        return $this->belongsToMany(Role::class, 'user_role');
+        return $this->organizations()->first();
+    }
+
+    public function organizations()
+    {
+        return $this->belongsToMany(
+            Organization::class,
+            'organization_user'
+        )->withPivot('role_id');
+    }
+
+    public function role()
+    {
+        return $this->belongsToMany(
+            Role::class,
+            'organization_user'
+        )->withPivot('organization_id')->first();
     }
 
     public function getJWTIdentifier(): mixed

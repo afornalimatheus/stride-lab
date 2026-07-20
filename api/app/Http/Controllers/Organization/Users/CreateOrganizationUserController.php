@@ -39,6 +39,7 @@ class CreateOrganizationUserController extends Controller
             name: $request->name,
             email: $request->email,
             password: $request->password,
+            role: $request->role,
         );
 
         $user = $action->execute($data, $request->user());

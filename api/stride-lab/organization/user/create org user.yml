@@ -11,8 +11,9 @@ http:
     data: |-
       {
         "name": "Torrada Afornali",
-        "email": "torrara@toastlabs.com.br",
-        "password": "password"
+        "email": "torrada5@toastlabs.com.br",
+        "password": "password",
+        "role": "MANAGER"
       }
   auth: inherit
 
