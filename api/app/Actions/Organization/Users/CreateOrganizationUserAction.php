@@ -3,8 +3,8 @@
 namespace App\Actions\Organization\Users;
 
 use App\DTOs\Organization\User\CreateOrganizationUserDTO;
-use App\Models\OrganizationUser;
 use App\Models\Role;
+use App\Enums\RoleEnum;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -16,6 +16,10 @@ readonly class CreateOrganizationUserAction
 
         if (!$organization) {
             throw new \Exception('User does not belong to any organization.');
+        }
+
+        if ($data->role === RoleEnum::SUPER_ADMIN) {
+            throw new \Exception('Cannot assign SUPER_ADMIN role.');
         }
 
         $role = Role::where('name', $data->role)->first();
