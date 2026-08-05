@@ -128,7 +128,7 @@ class BaseRequest extends FormRequest
 
         // If property type allows None, set default = new None()
         $default = $m['hasNone']
-            ? new None()
+            ? new None
             : null;
 
         // If property type includes UploadedFile, fetch it from file bag

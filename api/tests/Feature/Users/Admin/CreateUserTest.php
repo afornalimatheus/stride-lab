@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+
 use function Pest\Laravel\assertDatabaseCount;
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertDatabaseMissing;
@@ -13,7 +14,7 @@ use function Pest\Laravel\assertDatabaseMissing;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->action = new CreateUserAction();
+    $this->action = new CreateUserAction;
     $this->actor = User::factory()->create();
 });
 
@@ -94,7 +95,7 @@ describe('action', function () {
 
         DB::shouldReceive('transaction')
             ->once()
-            ->andThrow(new \RuntimeException('Simulated failure'));
+            ->andThrow(new RuntimeException('Simulated failure'));
 
         expect(fn () => $this->action->execute(
             new CreateUserDTO(
@@ -103,7 +104,7 @@ describe('action', function () {
                 password: '__test_password__',
             ),
             $this->actor,
-        ))->toThrow(\RuntimeException::class, 'Simulated failure');
+        ))->toThrow(RuntimeException::class, 'Simulated failure');
 
         expect(User::count())->toBe($countBefore);
     });

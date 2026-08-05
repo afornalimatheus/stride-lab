@@ -17,15 +17,20 @@ class CreateUserController extends Controller
      *     path="/api/admin/dashboard/users",
      *     tags={"Users"},
      *     security={{"bearerAuth":{}}},
+     *
      *     @OA\RequestBody(
      *         required=true,
+     *
      *         @OA\JsonContent(ref="#/components/schemas/CreateUserRequest")
      *     ),
+     *
      *     @OA\Response(
      *         response=201,
      *         description="User created successfully",
+     *
      *         @OA\JsonContent(ref="#/components/schemas/CreateUserResponse")
      *     ),
+     *
      *     @OA\Response(response=401, ref="#/components/responses/UnauthorizedResponse"),
      *     @OA\Response(response=404, ref="#/components/responses/NotFoundResponse"),
      *     @OA\Response(response=422, ref="#/components/responses/UnprocessableEntityResponse")
@@ -39,6 +44,7 @@ class CreateUserController extends Controller
             name: $request->name,
             email: $request->email,
             password: $request->password,
+            role: $request->role,
         );
 
         $user = $action->execute($data, $request->user());

@@ -17,15 +17,20 @@ class CreateOrganizationUserController extends Controller
      *     path="/api/dashboard/users",
      *     tags={"Users"},
      *     security={{"bearerAuth":{}}},
+     *
      *     @OA\RequestBody(
      *         required=true,
+     *
      *         @OA\JsonContent(ref="#/components/schemas/CreateOrganizationUserRequest")
      *     ),
+     *
      *     @OA\Response(
      *         response=201,
      *         description="User created successfully",
+     *
      *         @OA\JsonContent(ref="#/components/schemas/CreateUserResponse")
      *     ),
+     *
      *     @OA\Response(response=401, ref="#/components/responses/UnauthorizedResponse"),
      *     @OA\Response(response=404, ref="#/components/responses/NotFoundResponse"),
      *     @OA\Response(response=422, ref="#/components/responses/UnprocessableEntityResponse")

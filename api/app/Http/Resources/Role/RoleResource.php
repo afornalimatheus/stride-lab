@@ -12,6 +12,7 @@ use OpenApi\Annotations as OA;
  *     schema="RoleResource",
  *     title="Role Resource",
  *     type="object",
+ *
  *     @OA\Property(
  *         property="id",
  *         type="string",
@@ -29,7 +30,6 @@ use OpenApi\Annotations as OA;
 class RoleResource extends JsonResource
 {
     /**
-     * @param Request $request
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array

@@ -3,8 +3,8 @@
 namespace App\Actions\Organization\Users;
 
 use App\DTOs\Organization\User\CreateOrganizationUserDTO;
-use App\Models\Role;
 use App\Enums\RoleEnum;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 

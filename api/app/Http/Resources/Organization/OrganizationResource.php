@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Organization;
 
 use App\Http\Resources\JsonResource;
+use App\Models\User;
 use Illuminate\Http\Request;
 use OpenApi\Annotations as OA;
 
@@ -11,6 +12,7 @@ use OpenApi\Annotations as OA;
  *     schema="CreateOrganizationUserResource",
  *     title="Create Organization User Resource",
  *     type="object",
+ *
  *     @OA\Property(
  *         property="id",
  *         type="string",
@@ -33,18 +35,18 @@ use OpenApi\Annotations as OA;
  *     schema="CreateOrganizationUserResponse",
  *     title="Create Organization User Response",
  *     type="object",
+ *
  *     @OA\Property(
  *         property="data",
  *         ref="#/components/schemas/CreateOrganizationUserResource"
  *     )
  * )
  *
- * @mixin \App\Models\User
+ * @mixin User
  */
 class OrganizationResource extends JsonResource
 {
     /**
-     * @param Request $request
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array

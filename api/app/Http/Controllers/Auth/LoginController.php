@@ -16,16 +16,13 @@ class LoginController extends Controller
         $credentials = $request->validated();
         $guard = $this->jwtGuard();
 
-        if (!$token = $guard->attempt($credentials)) {
+        if (! $token = $guard->attempt($credentials)) {
             return response()->json(['message' => 'Invalid credentials.'], 401);
         }
 
         return $this->respondWithToken($token);
     }
 
-    /**
-     * @return JsonResponse
-     */
     private function respondWithToken(string $token): JsonResponse
     {
         $guard = $this->jwtGuard();

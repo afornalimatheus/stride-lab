@@ -17,7 +17,7 @@ class JsonResource extends BaseJsonResource
     {
         parent::__construct($resource);
 
-        if (!($this->resource instanceof Model)) {
+        if (! ($this->resource instanceof Model)) {
             return;
         }
 
@@ -27,8 +27,7 @@ class JsonResource extends BaseJsonResource
     /**
      * Intercept property access to automatically check if attribute was selected and return formatted values.
      *
-     * @param string $key
-     * @return mixed
+     * @param  string  $key
      */
     public function __get($key): mixed
     {

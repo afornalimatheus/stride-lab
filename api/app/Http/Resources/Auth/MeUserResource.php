@@ -12,6 +12,7 @@ use OpenApi\Annotations as OA;
  *     schema="MeUserResource",
  *     title="Me User Resource",
  *     type="object",
+ *
  *     @OA\Property(
  *         property="id",
  *         type="string",
@@ -34,6 +35,7 @@ use OpenApi\Annotations as OA;
  *     schema="MeUserResponse",
  *     title="Me User Response",
  *     type="object",
+ *
  *     @OA\Property(
  *         property="data",
  *         ref="#/components/schemas/MeUserResource"
@@ -45,10 +47,9 @@ use OpenApi\Annotations as OA;
 class MeUserResource extends JsonResource
 {
     /**
-     * @param \Illuminate\Http\Request $request
      * @return array<string, mixed>
      */
-    public function toArray(\Illuminate\Http\Request $request): array
+    public function toArray(Request $request): array
     {
         return [
             'id' => $this->id,

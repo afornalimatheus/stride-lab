@@ -9,6 +9,7 @@ use App\Http\Requests\BaseRequest;
  *     schema="LoginRequestBody",
  *     title="Login request body",
  *     type="object",
+ *
  *     @OA\Property(property="email", type="string", format="email", maxLength=255),
  *     @OA\Property(property="password", type="string", format="password", maxLength=255)
  * )
@@ -24,7 +25,7 @@ class LoginRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'email'    => ['required', 'string', 'email', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255'],
             'password' => ['required', 'string'],
         ];
     }

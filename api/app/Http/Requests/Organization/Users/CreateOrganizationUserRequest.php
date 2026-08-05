@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests\Organization\Users;
 
+use App\Enums\RoleEnum;
 use App\Http\Requests\BaseRequest;
 use Illuminate\Validation\Rule;
-use App\Enums\RoleEnum;
-use Illuminate\Validation\Validator;
 use OpenApi\Annotations as OA;
 
 /**
@@ -14,6 +13,7 @@ use OpenApi\Annotations as OA;
  *     title="Create Organization User Request",
  *     type="object",
  *     required={"name", "email", "password"},
+ *
  *     @OA\Property(
  *         property="name",
  *         type="string",
@@ -55,8 +55,8 @@ class CreateOrganizationUserRequest extends BaseRequest
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')],
             'password' => ['required', 'string', 'min:8'],
             'role' => [
-                'required', 
-                'string', 
+                'required',
+                'string',
                 Rule::in(RoleEnum::OWNER->value, RoleEnum::MANAGER->value, RoleEnum::ATHLETE->value)],
         ];
     }

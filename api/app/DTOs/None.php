@@ -2,6 +2,4 @@
 
 namespace App\DTOs;
 
-final class None
-{
-}
+final class None {}
