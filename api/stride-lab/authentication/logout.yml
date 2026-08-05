@@ -1,0 +1,24 @@
+info:
+  name: logout
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{API_URL}}/auth/logout"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const responseBody = res.getBody();
+        const accessToken = responseBody.access_token;
+
+        bru.setEnvVar("access_token", accessToken);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

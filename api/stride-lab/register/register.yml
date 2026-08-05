@@ -1,0 +1,23 @@
+info:
+  name: register
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{API_URL}}/auth/register"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Andressa Ferreira",
+        "email": "andressa@toastlabs.com.br",
+        "password": "password",
+        "password_confirmation": "password"
+      }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
