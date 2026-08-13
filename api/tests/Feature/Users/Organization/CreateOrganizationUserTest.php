@@ -66,7 +66,7 @@ describe('route', function () {
 });
 
 describe('action', function () {
-    it('responds with an exception if the authenticated user does not belong to any organization', function () {
+    it('responds with forbidden when the authenticated user does not belong to any organization', function () {
         $this->authenticatedUser = User::factory()->create();
 
         $token = JWTAuth::fromUser($this->authenticatedUser);
@@ -79,9 +79,7 @@ describe('action', function () {
             'role' => RoleEnum::MANAGER->value,
         ]);
 
-        $response->assertJson([
-            'message' => 'User does not belong to any organization.',
-        ]);
+        $response->assertForbidden();
     });
 
     it('responds with an exception if the role is SUPER_ADMIN', function () {

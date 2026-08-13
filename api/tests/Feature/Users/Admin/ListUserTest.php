@@ -1,0 +1,143 @@
+<?php
+
+use App\Enums\RoleEnum;
+use App\Models\Organization;
+use App\Models\Role;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tymon\JWTAuth\Facades\JWTAuth;
+
+use function Pest\Laravel\getJson;
+
+uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    Model::unguard();
+
+    foreach (RoleEnum::cases() as $roleEnum) {
+        Role::create(['name' => $roleEnum->value]);
+    }
+
+    $this->withRole = function (RoleEnum $role): void {
+        if ($role === RoleEnum::SUPER_ADMIN) {
+            $this->authenticatedUser = User::factory()->globalRole($role)->create();
+
+            $this->organization = Organization::factory()->create([
+                'owner_id' => $this->authenticatedUser->id,
+            ]);
+        } else {
+            $this->authenticatedUser = User::factory()->create();
+
+            $this->organization = Organization::factory()->create([
+                'owner_id' => $this->authenticatedUser->id,
+            ]);
+
+            $this->organization->members()->create([
+                'user_id' => $this->authenticatedUser->id,
+                'role_id' => Role::where('name', $role->value)->first()->id,
+            ]);
+        }
+
+        $token = JWTAuth::fromUser($this->authenticatedUser);
+        $this->withToken($token);
+    };
+
+    ($this->withRole)(RoleEnum::SUPER_ADMIN);
+
+    $this->route = route('admin.dashboard.users.list');
+});
+
+describe('route', function () {
+    it('responds with unauthorized when not authenticated', function () {
+        $this->flushHeaders();
+
+        $response = getJson($this->route);
+
+        $response->assertUnauthorized();
+    });
+
+    it('responds with forbidden when role is not SUPER_ADMIN', function () {
+        foreach ([RoleEnum::OWNER, RoleEnum::MANAGER, RoleEnum::COACH, RoleEnum::ATHLETE] as $role) {
+            ($this->withRole)($role);
+
+            $response = getJson($this->route);
+
+            $response->assertForbidden();
+        }
+    });
+});
+
+describe('action', function () {
+    it('returns a paginated list of users', function () {
+        User::factory()->count(3)->create();
+
+        $response = getJson($this->route);
+
+        $response->assertOk()
+            ->assertJsonStructure(['data', 'links', 'meta']);
+    });
+
+    it('returns user data in the correct shape', function () {
+        $response = getJson($this->route);
+
+        $response->assertOk()
+            ->assertJsonStructure([
+                'data' => [['id', 'name', 'email', 'active']],
+            ]);
+    });
+
+    it('filters users by name', function () {
+        User::factory()->create(['name' => 'Alice Wonder']);
+        User::factory()->create(['name' => 'Bob Builder']);
+
+        $response = getJson($this->route.'?filter[name]=Alice');
+
+        $response->assertOk();
+
+        $names = collect($response->json('data'))->pluck('name');
+        expect($names->every(fn ($n) => str_contains($n, 'Alice')))->toBeTrue();
+    });
+
+    it('filters users by role', function () {
+        $ownerUser = User::factory()->create();
+        $this->organization->members()->create([
+            'user_id' => $ownerUser->id,
+            'role_id' => Role::where('name', RoleEnum::OWNER->value)->first()->id,
+        ]);
+
+        $response = getJson($this->route.'?filter[role]='.RoleEnum::OWNER->value);
+
+        $response->assertOk();
+        expect($response->json('data'))->not->toBeEmpty();
+    });
+
+    it('filters users by organization name', function () {
+        $response = getJson($this->route.'?filter[organization]='.urlencode($this->organization->name));
+
+        $response->assertOk();
+    });
+
+    it('filters active users when active=1', function () {
+        $response = getJson($this->route.'?filter[active]=1');
+
+        $response->assertOk();
+        expect(collect($response->json('data'))->every(fn ($u) => $u['active'] === true))->toBeTrue();
+    });
+
+    it('filters inactive users when active=0', function () {
+        $userToDelete = User::factory()->create();
+        $userToDelete->delete();
+
+        $response = getJson($this->route.'?filter[active]=0');
+
+        $response->assertOk();
+        expect(collect($response->json('data'))->every(fn ($u) => $u['active'] === false))->toBeTrue();
+    });
+
+    it('rejects invalid active filter values', function () {
+        $response = getJson($this->route.'?filter[active]=banana');
+
+        $response->assertUnprocessable();
+    });
+});

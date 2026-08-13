@@ -7,16 +7,17 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'global_role_id'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     /**
      * Get the attributes that should be cast.
@@ -44,12 +45,15 @@ class User extends Authenticatable implements JWTSubject
         )->withPivot('role_id');
     }
 
-    public function role()
+    public function globalRole()
     {
-        return $this->belongsToMany(
-            Role::class,
-            'organization_user'
-        )->withPivot('organization_id')->first();
+        return $this->belongsTo(Role::class, 'global_role_id');
+    }
+
+    public function role(): ?Role
+    {
+        return $this->globalRole
+            ?? $this->belongsToMany(Role::class, 'organization_user')->withPivot('organization_id')->first();
     }
 
     public function getJWTIdentifier(): mixed

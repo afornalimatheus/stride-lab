@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Organization;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\UserRole;
 use Illuminate\Database\Seeder;
 
 class UserRoleSeeder extends Seeder
@@ -17,9 +18,15 @@ class UserRoleSeeder extends Seeder
         $organization = Organization::first();
 
         $superAdminUser = User::where('name', 'Super Admin')->first();
-        $organization->members()->create([
+        $superAdminRole = Role::where('name', 'SUPER_ADMIN')->first();
+        
+        $superAdminUser->update([
+            'global_role_id' => $superAdminRole->id,
+        ]);
+        
+        UserRole::create([
             'user_id' => $superAdminUser->id,
-            'role_id' => Role::where('name', 'SUPER_ADMIN')->first()->id,
+            'role_id' => $superAdminRole->id,
         ]);
 
         $ownerUser = User::where('name', 'Owner')->first();

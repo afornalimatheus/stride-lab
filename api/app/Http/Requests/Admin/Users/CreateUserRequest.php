@@ -49,7 +49,7 @@ class CreateUserRequest extends BaseRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')],
             'password' => ['required', 'string', 'min:8'],
-            'role' => ['nullable', 'string', Rule::in([RoleEnum::OWNER->value, RoleEnum::COACH->value, RoleEnum::ATHLETE->value])],
+            'role' => ['nullable', 'string', Rule::in(RoleEnum::values())],
         ];
     }
 }
