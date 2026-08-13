@@ -18,7 +18,7 @@ class EnsureUserRole
     {
         $userRole = $request->user()?->role()?->name;
 
-        if (!in_array($userRole, $roles, true)) {
+        if (! in_array($userRole, $roles, true)) {
             throw new AccessDeniedHttpException('Insufficient permissions to access this resource.');
         }
 

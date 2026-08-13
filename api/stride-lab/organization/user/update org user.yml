@@ -1,0 +1,29 @@
+info:
+  name: update org user
+  type: http
+  seq: 4
+
+http:
+  method: PATCH
+  url: "{{API_URL}}/dashboard/users/{{userId}}"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Matheus Afornali",
+        "role": "OWNER"
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: userId
+      value:
+        type: number
+        data: "12"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

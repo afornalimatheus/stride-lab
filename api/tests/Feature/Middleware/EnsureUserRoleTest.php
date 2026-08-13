@@ -1,7 +1,6 @@
 <?php
 
 use App\Enums\RoleEnum;
-use App\Models\Organization;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -19,17 +18,8 @@ beforeEach(function () {
         Role::create(['name' => $roleEnum->value]);
     }
 
-    $this->withRole = function (RoleEnum $role): void {
-        $this->authenticatedUser = User::factory()->create();
-
-        $organization = Organization::factory()->create([
-            'owner_id' => $this->authenticatedUser->id,
-        ]);
-
-        $organization->members()->create([
-            'user_id' => $this->authenticatedUser->id,
-            'role_id' => Role::where('name', $role->value)->first()->id,
-        ]);
+    $this->withGlobalRole = function (RoleEnum $role): void {
+        $this->authenticatedUser = User::factory()->globalRole($role)->create();
 
         $token = JWTAuth::fromUser($this->authenticatedUser);
         $this->withToken($token);
@@ -51,8 +41,8 @@ describe('route', function () {
 });
 
 describe('middleware', function () {
-    it('allows a user with the SUPER_ADMIN role', function () {
-        ($this->withRole)(RoleEnum::SUPER_ADMIN);
+    it('allows a user with the SUPER_ADMIN global role', function () {
+        ($this->withGlobalRole)(RoleEnum::SUPER_ADMIN);
 
         $response = postJson($this->route, [
             'name' => '__test_name__',
@@ -63,8 +53,8 @@ describe('middleware', function () {
         $response->assertCreated();
     });
 
-    it('responds with forbidden when the user has the OWNER role', function () {
-        ($this->withRole)(RoleEnum::OWNER);
+    it('responds with forbidden when the user has the OWNER global role', function () {
+        ($this->withGlobalRole)(RoleEnum::OWNER);
 
         $response = postJson($this->route, [
             'name' => '__test_name__',
@@ -75,8 +65,8 @@ describe('middleware', function () {
         $response->assertForbidden();
     });
 
-    it('responds with forbidden when the user has the MANAGER role', function () {
-        ($this->withRole)(RoleEnum::MANAGER);
+    it('responds with forbidden when the user has the MANAGER global role', function () {
+        ($this->withGlobalRole)(RoleEnum::MANAGER);
 
         $response = postJson($this->route, [
             'name' => '__test_name__',
@@ -87,8 +77,8 @@ describe('middleware', function () {
         $response->assertForbidden();
     });
 
-    it('responds with forbidden when the user has the COACH role', function () {
-        ($this->withRole)(RoleEnum::COACH);
+    it('responds with forbidden when the user has the COACH global role', function () {
+        ($this->withGlobalRole)(RoleEnum::COACH);
 
         $response = postJson($this->route, [
             'name' => '__test_name__',
@@ -99,8 +89,23 @@ describe('middleware', function () {
         $response->assertForbidden();
     });
 
-    it('responds with forbidden when the user has the ATHLETE role', function () {
-        ($this->withRole)(RoleEnum::ATHLETE);
+    it('responds with forbidden when the user has the ATHLETE global role', function () {
+        ($this->withGlobalRole)(RoleEnum::ATHLETE);
+
+        $response = postJson($this->route, [
+            'name' => '__test_name__',
+            'email' => 'test@example.com',
+            'password' => '__test_password__',
+        ]);
+
+        $response->assertForbidden();
+    });
+
+    it('responds with forbidden when the user has no global role', function () {
+        $this->authenticatedUser = User::factory()->create();
+
+        $token = JWTAuth::fromUser($this->authenticatedUser);
+        $this->withToken($token);
 
         $response = postJson($this->route, [
             'name' => '__test_name__',
